@@ -1,0 +1,45 @@
+{
+  "name": "@cleanmod/js",
+  "version": "0.1.0",
+  "description": "Official JavaScript/TypeScript client for the CleanMod moderation API",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "prepublishOnly": "pnpm run build"
+  },
+  "keywords": [
+    "moderation",
+    "ai",
+    "content-moderation",
+    "cleanmod"
+  ],
+  "author": "Shlomi Zadok",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5",
+    "tsup": "^8.0.0"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ]
+}
+
