@@ -29,6 +29,10 @@
   ],
   "author": "Shlomi Zadok",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shlomizadok/cleanmod-js.git"
+  },
   "publishConfig": {
     "access": "public"
   },
