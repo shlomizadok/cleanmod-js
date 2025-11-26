@@ -1,6 +1,6 @@
 {
   "name": "@cleanmod/js",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Official JavaScript/TypeScript client for the CleanMod moderation API",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
