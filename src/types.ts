@@ -16,7 +16,10 @@ export interface ModerateResponse {
   providerModel: string;
   decision: "allow" | "flag" | "block";
   overallScore: number;
-  threshold: number;
+  thresholds: {
+    flag: number;
+    block: number;
+  };
   categories: Record<string, number>;
   createdAt: Date;
 }
