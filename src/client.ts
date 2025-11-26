@@ -59,8 +59,20 @@ export class CleanModClient {
         );
       }
 
-      const data = (await response.json()) as ModerateResponse;
-      return data;
+      const data = await response.json();
+
+      // Transform snake_case API response fields to camelCase for SDK
+      return {
+        id: data.id,
+        model: data.model,
+        provider: data.provider,
+        providerModel: data.providerModel,
+        decision: data.decision,
+        overallScore: data.overall_score,
+        thresholds: data.thresholds,
+        categories: data.categories,
+        createdAt: new Date(data.created_at),
+      } as ModerateResponse;
     } catch (err: any) {
       if (err?.name === "AbortError") {
         throw new Error("CleanMod: request timed out");

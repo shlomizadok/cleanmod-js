@@ -30,7 +30,7 @@ async function run() {
     text: "you are an idiot",
   });
 
-  console.log(result.decision, result.overall_score, result.categories);
+  console.log(result.decision, result.overallScore, result.categories);
 }
 
 run().catch(console.error);
@@ -75,7 +75,7 @@ Moderates a text input.
 - `providerModel`: The specific provider model used
 - `decision`: The moderation decision (`"allow"`, `"flag"`, or `"block"`)
 - `overallScore`: Overall toxicity score (0-1)
-- `threshold`: The threshold used for decision making
+- `thresholds`: Object containing `flag` and `block` threshold values used for decision making
 - `categories`: Object mapping category names to scores (0-1)
 - `createdAt`: ISO 8601 timestamp of when the moderation was performed
 

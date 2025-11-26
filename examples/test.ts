@@ -37,10 +37,10 @@ async function main() {
       const result = await client.moderate({ text });
 
       console.log(`  Decision: ${result.decision}`);
-      console.log(`  Overall Score: ${result.overall_score}`);
+      console.log(`  Overall Score: ${result.overallScore}`);
       console.log(`  Categories:`, result.categories);
       console.log(`  ID: ${result.id}`);
-      console.log(`  Created: ${result.created_at}`);
+      console.log(`  Created: ${result.createdAt}`);
       console.log();
     } catch (error: any) {
       console.error(`  Error: ${error.message}`);
