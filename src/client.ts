@@ -36,6 +36,7 @@ export class CleanModClient {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${this.apiKey}`,
+          "x-cleanmod-client": "js-sdk",
         },
         body: JSON.stringify({
           text: req.text,
