@@ -31,6 +31,8 @@ async function main() {
 
   console.log("Testing CleanMod SDK...\n");
 
+  // Test 1: Basic moderation (uses org default mode)
+  console.log("=== Test 1: Basic moderation (org default mode) ===\n");
   for (const text of testTexts) {
     try {
       console.log(`Moderating: "${text}"`);
@@ -38,9 +40,35 @@ async function main() {
 
       console.log(`  Decision: ${result.decision}`);
       console.log(`  Overall Score: ${result.overallScore}`);
+      console.log(`  Mode: ${result.mode || "default"}`);
+      console.log(
+        `  Thresholds: flag=${result.thresholds.flag}, block=${result.thresholds.block}`
+      );
       console.log(`  Categories:`, result.categories);
       console.log(`  ID: ${result.id}`);
-      console.log(`  Created: ${result.createdAt}`);
+      console.log();
+    } catch (error: any) {
+      console.error(`  Error: ${error.message}`);
+      console.log();
+    }
+  }
+
+  // Test 2 & 3: Strict and Lenient modes
+  const textForModeTests = "you are an idiot";
+  for (const mode of ["strict", "lenient"] as const) {
+    console.log(`\n=== Test for ${mode} mode ===\n`);
+    try {
+      console.log(`Moderating with ${mode} mode: "${textForModeTests}"`);
+      const result = await client.moderate({ text: textForModeTests, mode });
+
+      console.log(`  Decision: ${result.decision}`);
+      console.log(`  Overall Score: ${result.overallScore}`);
+      console.log(`  Mode: ${result.mode}`);
+      console.log(
+        `  Thresholds: flag=${result.thresholds.flag}, block=${result.thresholds.block}`
+      );
+      console.log(`  Categories:`, result.categories);
+      console.log(`  ID: ${result.id}`);
       console.log();
     } catch (error: any) {
       console.error(`  Error: ${error.message}`);

@@ -7,6 +7,7 @@ export interface CleanModOptions {
 export interface ModerateRequest {
   text: string;
   model?: string; // "english-basic" for now
+  mode?: "lenient" | "default" | "strict"; // moderation sensitivity mode
 }
 
 export interface ModerateResponse {
@@ -21,5 +22,6 @@ export interface ModerateResponse {
     block: number;
   };
   categories: Record<string, number>;
+  mode?: "lenient" | "default" | "strict"; // moderation mode used
   createdAt: Date;
 }
