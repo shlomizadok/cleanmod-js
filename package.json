@@ -19,7 +19,8 @@
   },
   "scripts": {
     "build": "tsup",
-    "prepublishOnly": "pnpm run build"
+    "prepublishOnly": "pnpm run build",
+    "test": "tsx examples/test.ts"
   },
   "keywords": [
     "moderation",
@@ -36,10 +37,11 @@
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {},
   "devDependencies": {
-    "typescript": "^5",
-    "tsup": "^8.0.0"
+    "@types/node": "^25.0.1",
+    "tsup": "^8.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5"
   },
   "files": [
     "dist",

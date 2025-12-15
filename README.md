@@ -28,9 +28,11 @@ const client = createCleanModClient({
 async function run() {
   const result = await client.moderate({
     text: "you are an idiot",
+    mode: "strict", // optional: "lenient", "default", or "strict"
   });
 
   console.log(result.decision, result.overallScore, result.categories);
+  console.log(result.mode, result.thresholds); // mode and thresholds used
 }
 
 run().catch(console.error);
@@ -66,6 +68,13 @@ Moderates a text input.
 
 - `text` (required): The text to moderate
 - `model` (optional): The moderation model to use (default: `"english-basic"`)
+- `mode` (optional): The moderation sensitivity mode. Must be one of:
+
+  - `"lenient"`: Higher thresholds (flag: 0.9, block: 0.98) - Only very toxic content is flagged
+  - `"default"`: Balanced thresholds (flag: 0.8, block: 0.95) - Standard moderation
+  - `"strict"`: Lower thresholds (flag: 0.3, block: 0.6) - More aggressive flagging
+
+  If not provided, uses your organization's default mode (set in dashboard), or falls back to `"default"`.
 
 **Response:**
 
@@ -77,6 +86,7 @@ Moderates a text input.
 - `overallScore`: Overall toxicity score (0-1)
 - `thresholds`: Object containing `flag` and `block` threshold values used for decision making
 - `categories`: Object mapping category names to scores (0-1)
+- `mode`: The moderation mode that was used for this request (either from the request or your organization's default)
 - `createdAt`: ISO 8601 timestamp of when the moderation was performed
 
 ## License

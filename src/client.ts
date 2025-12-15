@@ -41,6 +41,7 @@ export class CleanModClient {
         body: JSON.stringify({
           text: req.text,
           model: req.model ?? "english-basic",
+          ...(req.mode && { mode: req.mode }),
         }),
         signal: controller.signal,
       });
@@ -72,6 +73,7 @@ export class CleanModClient {
         overallScore: data.overall_score,
         thresholds: data.thresholds,
         categories: data.categories,
+        mode: data.mode,
         createdAt: new Date(data.created_at),
       } as ModerateResponse;
     } catch (err: any) {
