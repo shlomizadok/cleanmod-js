@@ -53,44 +53,27 @@ async function main() {
     }
   }
 
-  // Test 2: Strict mode
-  console.log("\n=== Test 2: Strict mode ===\n");
-  try {
-    const text = "you are an idiot";
-    console.log(`Moderating with strict mode: "${text}"`);
-    const result = await client.moderate({ text, mode: "strict" });
+  // Test 2 & 3: Strict and Lenient modes
+  const textForModeTests = "you are an idiot";
+  for (const mode of ["strict", "lenient"] as const) {
+    console.log(`\n=== Test for ${mode} mode ===\n`);
+    try {
+      console.log(`Moderating with ${mode} mode: "${textForModeTests}"`);
+      const result = await client.moderate({ text: textForModeTests, mode });
 
-    console.log(`  Decision: ${result.decision}`);
-    console.log(`  Overall Score: ${result.overallScore}`);
-    console.log(`  Mode: ${result.mode}`);
-    console.log(
-      `  Thresholds: flag=${result.thresholds.flag}, block=${result.thresholds.block}`
-    );
-    console.log(`  Categories:`, result.categories);
-    console.log();
-  } catch (error: any) {
-    console.error(`  Error: ${error.message}`);
-    console.log();
-  }
-
-  // Test 3: Lenient mode
-  console.log("\n=== Test 3: Lenient mode ===\n");
-  try {
-    const text = "you are an idiot";
-    console.log(`Moderating with lenient mode: "${text}"`);
-    const result = await client.moderate({ text, mode: "lenient" });
-
-    console.log(`  Decision: ${result.decision}`);
-    console.log(`  Overall Score: ${result.overallScore}`);
-    console.log(`  Mode: ${result.mode}`);
-    console.log(
-      `  Thresholds: flag=${result.thresholds.flag}, block=${result.thresholds.block}`
-    );
-    console.log(`  Categories:`, result.categories);
-    console.log();
-  } catch (error: any) {
-    console.error(`  Error: ${error.message}`);
-    console.log();
+      console.log(`  Decision: ${result.decision}`);
+      console.log(`  Overall Score: ${result.overallScore}`);
+      console.log(`  Mode: ${result.mode}`);
+      console.log(
+        `  Thresholds: flag=${result.thresholds.flag}, block=${result.thresholds.block}`
+      );
+      console.log(`  Categories:`, result.categories);
+      console.log(`  ID: ${result.id}`);
+      console.log();
+    } catch (error: any) {
+      console.error(`  Error: ${error.message}`);
+      console.log();
+    }
   }
 
   console.log("Test completed!");
