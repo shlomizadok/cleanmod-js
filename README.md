@@ -16,6 +16,54 @@ yarn add @cleanmod/js
 pnpm add @cleanmod/js
 ```
 
+## Migrating from `perspective-api-client`
+
+Google's Perspective API shuts down on December 31, 2026. The `perspective-api-client`
+package hard-codes Google's URL, so it can't be repointed. `@cleanmod/js/perspective` is a
+drop-in replacement with the same interface:
+
+```diff
+- const Perspective = require("perspective-api-client");
++ const Perspective = require("@cleanmod/js/perspective");
+
+  const perspective = new Perspective({ apiKey: process.env.CLEANMOD_API_KEY });
+  const result = await perspective.analyze("you empty-headed animal food trough wiper!", {
+    attributes: ["toxicity", "insult"],
+  });
+  console.log(result.attributeScores.TOXICITY.summaryScore.value);
+```
+
+Same as `perspective-api-client`: `analyze(text | request, options)`, the `attributes`,
+`stripHTML`, `truncate`, `doNotStore` and `validate` options with the same defaults,
+`getAnalyzeCommentPayload()`, and the `ResponseError`, `TextEmptyError`, `TextTooLongError`
+and `PerspectiveAPIClientError` classes (`error.response.status` / `error.response.data`).
+
+Differences:
+
+- Get a CleanMod API key at [cleanmod.dev](https://cleanmod.dev/dashboard/api-keys); Google keys don't work.
+- The key is sent in an `Authorization` header instead of a `?key=` query parameter.
+- Extra options: `baseUrl` and `timeoutMs` (default 10 s). Requires Node 18+ (global `fetch`).
+- Scores come from CleanMod's models and don't match Perspective's numerically: re-check your thresholds.
+- English only for now; other languages raise `ResponseError` (HTTP 400). Supported attributes:
+  TOXICITY, SEVERE_TOXICITY, IDENTITY_ATTACK, INSULT, PROFANITY, THREAT, SEXUALLY_EXPLICIT.
+
+See the [migration guide](https://cleanmod.dev/perspective-api-alternative).
+
+### Perspective-format requests with `CleanModClient`
+
+```typescript
+import { createCleanModClient } from "@cleanmod/js";
+
+const client = createCleanModClient({ apiKey: process.env.CLEANMOD_API_KEY! });
+const res = await client.analyzeComment({
+  comment: { text: "you are an idiot" },
+  languages: ["en"],
+  requestedAttributes: { TOXICITY: {}, INSULT: { scoreThreshold: 0.5 } },
+});
+```
+
+Errors throw `CleanModPerspectiveError` with `status` and the API's error `body`.
+
 ## Usage
 
 ```typescript

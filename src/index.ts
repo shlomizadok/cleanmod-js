@@ -1,5 +1,6 @@
 export * from "./types";
-export { CleanModClient } from "./client";
+export * from "./perspective-types";
+export { CleanModClient, CleanModPerspectiveError } from "./client";
 
 import type { CleanModOptions } from "./types";
 import { CleanModClient } from "./client";

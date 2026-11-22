@@ -3,6 +3,23 @@ import type {
   ModerateRequest,
   ModerateResponse,
 } from "./types";
+import type {
+  AnalyzeCommentRequest,
+  AnalyzeCommentResponse,
+  PerspectiveErrorBody,
+} from "./perspective-types";
+
+/** Error from the Perspective-compatible endpoint (Google error envelope). */
+export class CleanModPerspectiveError extends Error {
+  constructor(
+    message: string,
+    public readonly status: number,
+    public readonly body: PerspectiveErrorBody | undefined
+  ) {
+    super(message);
+    this.name = "CleanModPerspectiveError";
+  }
+}
 
 const DEFAULT_BASE_URL = "https://cleanmod.dev";
 const DEFAULT_TIMEOUT_MS = 10000;
@@ -76,6 +93,50 @@ export class CleanModClient {
         mode: data.mode,
         createdAt: new Date(data.created_at),
       } as ModerateResponse;
+    } catch (err: any) {
+      if (err?.name === "AbortError") {
+        throw new Error("CleanMod: request timed out");
+      }
+      throw err;
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
+  /**
+   * Perspective API-compatible analysis: POST /v1alpha1/comments:analyze.
+   * Same request and response format as Google's Perspective API v1alpha1.
+   */
+  async analyzeComment(req: AnalyzeCommentRequest): Promise<AnalyzeCommentResponse> {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), this.timeoutMs);
+    try {
+      const response = await fetch(`${this.baseUrl}/v1alpha1/comments:analyze`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${this.apiKey}`,
+          "x-cleanmod-client": "js-sdk",
+        },
+        body: JSON.stringify(req),
+        signal: controller.signal,
+      });
+      const text = await response.text();
+      let data: unknown;
+      try {
+        data = text ? JSON.parse(text) : undefined;
+      } catch {
+        data = undefined;
+      }
+      if (!response.ok) {
+        const body = data as PerspectiveErrorBody | undefined;
+        throw new CleanModPerspectiveError(
+          `CleanMod: ${body?.error?.message ?? `API request failed with status ${response.status}`}`,
+          response.status,
+          body
+        );
+      }
+      return data as AnalyzeCommentResponse;
     } catch (err: any) {
       if (err?.name === "AbortError") {
         throw new Error("CleanMod: request timed out");

@@ -1,7 +1,7 @@
 {
   "name": "@cleanmod/js",
   "version": "0.2.0",
-  "description": "Official JavaScript/TypeScript client for the CleanMod moderation API",
+  "description": "Official JavaScript/TypeScript client for the CleanMod moderation API, including a drop-in replacement for perspective-api-client",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -15,24 +15,38 @@
         "types": "./dist/index.d.ts",
         "default": "./dist/index.cjs"
       }
+    },
+    "./perspective": {
+      "import": {
+        "types": "./dist/perspective.d.mts",
+        "default": "./dist/perspective.mjs"
+      },
+      "require": {
+        "types": "./dist/perspective.d.ts",
+        "default": "./dist/perspective.cjs"
+      }
     }
   },
   "scripts": {
     "build": "tsup",
     "prepublishOnly": "pnpm run build",
-    "test": "tsx examples/test.ts",
+    "test": "tsup && vitest run",
     "version:patch": "npm version patch",
     "version:minor": "npm version minor",
     "version:major": "npm version major",
     "publish:patch": "npm run version:patch && npm publish && git push && git push --tags",
     "publish:minor": "npm run version:minor && npm publish && git push && git push --tags",
-    "publish:major": "npm run version:major && npm publish && git push && git push --tags"
+    "publish:major": "npm run version:major && npm publish && git push && git push --tags",
+    "example": "tsx examples/test.ts"
   },
   "keywords": [
-    "moderation",
     "ai",
+    "cleanmod",
     "content-moderation",
-    "cleanmod"
+    "moderation",
+    "perspective-api",
+    "perspective-api-client",
+    "toxicity"
   ],
   "author": "Shlomi Zadok",
   "license": "MIT",
@@ -47,10 +61,14 @@
     "@types/node": "^25.0.1",
     "tsup": "^8.0.0",
     "tsx": "^4.21.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.2.7"
   },
   "files": [
     "dist",
     "README.md"
-  ]
+  ],
+  "dependencies": {
+    "striptags": "^3.2.0"
+  }
 }
